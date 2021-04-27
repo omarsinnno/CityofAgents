@@ -177,5 +177,5 @@ public override void OnActionReceived(ActionBuffers actions)
 ```
 Furthermore, a heuristic code is implemented.
 
-## Section Setup (Allows the use of the MA-POCA algorithm in Release 15+)
-
+## Second Setup
+In the second setup there are two main scripts. The controller has a controller script that derives from the MonoBehaviour base class not the Agent base class. The idea is to assign the same script to each agent, unlike the first setup where each agent has his own script. This leads to more efficient work that requires less space, since multiple agents will be accessing the same script.
