@@ -22,7 +22,11 @@ The task presented in the Restaurant environment is simple, and will be used as 
 
 The controller is a game object created with no added specification. Meaning that it does not have any visual or tangible shape. It is the parent of a group of agents that will complete tasks in the environment collaboratively. When the agent script is attached to the controller, it is important to check the inherit child sensors in the Unity inspector, so that the observations collected by the controller's children are exploited by the controller.
 
+![Control Components](https://github.com/omarsinnno/CityofAgents/blob/main/Control.png?raw=true)
+
 The agents have a rigidbody and a collider. The rigidbody will be used for the motion of the agents and the collider will be used to detect collisions and or triggers between obstacles. The agents will be the main actors in the environment that collect observations and perform the actions according to script. Each agent has a ray perception sensor 3D with: a specified length, a detection sphere at the end of the ray with a specified sphere radius, X and Y offsets to detect where the ray sensor should be positioned on the agent, number of rays that specify how many rays should stem from the agent, and finally the ray angle that specifies at which angles the rays are located.
+
+![Waiter Components](https://github.com/omarsinnno/CityofAgents/blob/main/Waiter.png?raw=true)
 
 The obstacles (such as the walls, NPCs in the environment, game objects, etc.) enforce the realistic motion of the agents in the environment. This is important so that our agent learns not to collide with people and objects while going to target: a real agent should maintain the safety of the people around it so it must not collide with them, a real agent should not break itself by colliding with walls, benches, chairs, etc. These obstacles have tags that allow for the agent to detect them using the ray perception sensor.
 
