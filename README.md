@@ -184,4 +184,8 @@ Furthermore, a heuristic code is implemented.
 ## Second Setup
 In the second setup there are two main scripts. The controller has a controller script that derives from the MonoBehaviour base class not the Agent base class. The idea is to assign the same script to each agent, unlike the first setup where each agent has his own script. This leads to more efficient work that requires less space, since multiple agents will be accessing the same script.
 
-We have not yet included in this repository an example that uses the second setup. If you're interested in implementing a collaborative environment that uses the MA-POCA algorithm, I invite you to refer to this example from the Unity ML-Agents team.
+We have not yet included in this repository an example that uses the second setup. If you're interested in implementing a collaborative environment that uses the MA-POCA algorithm, I invite you to refer to [this example from the Unity ML-Agents team](https://github.com/Unity-Technologies/ml-agents/tree/e4e9c51bf1615953759249cc8ad349534d2569f4/Project/Assets/ML-Agents/Examples/DungeonEscape/Scripts). It's their implementation of the DungeonEscape game using the MA-POCA, the framework in which it is implemented is very close to ours.
+
+# Training
+
+# Tensorboard 
