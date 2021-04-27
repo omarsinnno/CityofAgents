@@ -100,94 +100,82 @@ public override void CollectObservations(VectorSensor sensor)
   sensor.AddOneHotObservation( (int)counter , 3);
 }
 ```
-
+The OnActionReceived method is crucial, it is the method in which the reward scheme is described and is where the core of framework functionality is located. We define the actions first and assign aciton signals (moveWaiter) and (moveKitchen) to control the movements of the agents. A small negative reward is given at every step, to make sure the agent learns an optimal path to its target, or less formally, it learns how to hurry up. Then we define the reward scheme in every possible state the agents could be in, we keep track of the states using a counter. So in the code counter==state.
 ```C#
 public override void OnActionReceived(ActionBuffers actions)
+{
+	// Assigns the velocity signal / Force that moves the agents
+	// A signal is assigned to each agent
+	Vector3 moveWaiter = new Vector3();
+	Vector3 moveKitchen = new Vector3();
+	
+	// Assigns each signal to continuous actions that move
+	// Each agent in the X and Z directions (Vertically and Horizontally)
+	moveWaiter.x = actions.ContinuousActions[0];
+	moveWaiter.z = actions.ContinuousActions[1];
+	moveKitchen.x = actions.ContinuousActions[2];
+	moveKitchen.z = actions.ContinuousActions[3];
+	
+	// Changes the local position of the agents
+	waiter.transform.localPosition += (moveWaiter * Time.deltaTime * wspeed); 
+	kitchen.transform.localPosition += (moveKitchen * Time.deltaTime * kspeed);
+	
+	// MaxStep: maximum number of steps allowed in the episode
+	// Gives a penalty to the agents on each step in the episode
+	// This promotes finding the optimal path toward the target
+	AddReward(-1/MaxStep);
+	
+	<...>
+	// If Kitchen Agent reaches target
+	if (Kscript.GetTargetReached() == true)
 	{
-		// Speed up velocity
-		Vector3 moveWaiter = new Vector3();
-		Vector3 moveKitchen = new Vector3();
+		<...> Specify what happens when the Kitchen Agent reaches target (meeting point with waiter agent)
+		// We move from state (counter) 0 to state 1
+		counter = 1
+	}
 
-		moveWaiter.x = actions.ContinuousActions[0];
-		moveWaiter.z = actions.ContinuousActions[1];
-		moveKitchen.x = actions.ContinuousActions[2];
-		moveKitchen.z = actions.ContinuousActions[3];
+	// If Kitchen Agent has not reached Waiter Agent yet
+	if (counter == 0)
+	{
+		<...>
+	}
 
-		// ** Create movement
-		waiter.transform.localPosition += (moveWaiter * Time.deltaTime * wspeed); 
-		kitchen.transform.localPosition += (moveKitchen * Time.deltaTime * kspeed);
-    
-		AddReward(-1/MaxStep);
-
-		if (kitchen.transform.localPosition.y < -2 || waiter.transform.localPosition.y <-2 )
-    {
-			EndEpisode();
-		}
-
-		if (Kscript.GetTargetReached()== true)
-    {
-			counter = 1;
-			Kscript.SetTargetReached(false);
-			kspeed = 0;
-		}
-
-
-		if (counter == 0)
-    {
-			waiter.transform.localPosition = new Vector3( 9.59f, 0, -1.97f);
-		}
-
-		// If either agent reaches the first target (meeting point)
-		if (counter ==1 ){ 
-
-			kitchen.transform.localPosition = new Vector3( 7f, 0, -12f);
-			
-		}
-
-
-		// Kitchen reaches its target
-		if(Kscript.Threshold(kitchen.transform.localPosition, kitchentarget.transform.localPosition, 1.3f))
-    {	
-			foodK.SetActive(false);
-			foodW.SetActive(true);
-			
-			kitchen.transform.localPosition = new Vector3( 7f, 0, -12f);
-			Kscript.SetTargetReached(true);
-			AddReward(1f);
-		}
+	// Kitchen reaches its target
+	if(Kscript.Threshold(kitchen.transform.localPosition, kitchentarget.transform.localPosition, 1.3f))
+    	{	
+		<...>
+		AddReward(1f);
+	}
 
 		
-		// Waiter meetins with the kitchen agent
-		if(Wscript.Threshold(waiter.transform.localPosition, waitertarget.transform.localPosition, 1f) && waitertarget.tag == "GoalK")
-    {
-				AddReward(0.2f);
-				waitertarget = target;
-				//Debug.Log("Still here");	
-    }
+	// Waiter reaches kitchen agent
+	if(Wscript.Threshold(waiter.transform.localPosition, waitertarget.transform.localPosition, 1f) && waitertarget.tag == "GoalK")
+    	{
+		AddReward(0.2f);
+		waitertarget = target; // Now the waiter can go deliver the food	
+    	}
 
-		// Waiter delivers order
-		if(Wscript.Threshold(waiter.transform.localPosition, waitertarget.transform.localPosition, 1f) && waitertarget.tag == "Goal")
-    {		
-				AddReward(2f);	
-				EndEpisode();
-		}
+	// Waiter delivers order
+	if(Wscript.Threshold(waiter.transform.localPosition, waitertarget.transform.localPosition, 1f) && waitertarget.tag == "Goal")
+	{		
+		AddReward(2f);	
+		EndEpisode();
+	}
 
-		// Agents hit a wall
-		if (Kscript.GetWallHit() == true || Wscript.GetWallHit() == true)
-    {
-			AddReward(-1f);
-			EndEpisode();
-		}
-
-		// Hit obstacle
-		if (Wscript.GetEntryHit() == true){
-
-			AddReward(-1f);
-			EndEpisode();
-		}
-
+	// If Waiter or Agent hit an obstacle, end the episode
+	if (Kscript.GetWallHit() == true || Wscript.GetWallHit() == true)
+    	{
+		AddReward(-1f);
+		EndEpisode();
+	}
+	if (Wscript.GetEntryHit() == true)
+	{
+		AddReward(-1f);
+		EndEpisode();
+	}
 }
 ```
+Furthermore, a heuristic code is implemented.
 
 ## Section Setup (Allows the use of the MA-POCA algorithm in Release 15+)
 
