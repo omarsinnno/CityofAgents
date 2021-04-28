@@ -187,5 +187,7 @@ In the second setup there are two main scripts. The controller has a controller 
 We have not yet included in this repository an example that uses the second setup. If you're interested in implementing a collaborative environment that uses the MA-POCA algorithm, I invite you to refer to [this example from the Unity ML-Agents team](https://github.com/Unity-Technologies/ml-agents/tree/e4e9c51bf1615953759249cc8ad349534d2569f4/Project/Assets/ML-Agents/Examples/DungeonEscape/Scripts). It's their implementation of the DungeonEscape game using the MA-POCA, the framework in which it is implemented is very close to ours.
 
 # Training
+Refer to the ML-Agents official documentation for the [training](https://github.com/Unity-Technologies/ml-agents/blob/main/docs/Training-ML-Agents.md).
 
 # Tensorboard 
+Refer to the ML-Agents official documentation for the [tensorboard](https://github.com/Unity-Technologies/ml-agents/blob/main/docs/Using-Tensorboard.md).
